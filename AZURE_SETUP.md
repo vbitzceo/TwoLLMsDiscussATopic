@@ -1,8 +1,8 @@
-# Azure OpenAI Configuration for Two Models
+# Azure Services Configuration for Two LLMs Discussion
 
-This app uses TWO different Azure OpenAI models to create more interesting discussions between Alice and Bob.
+This app uses TWO different Azure OpenAI models to create more interesting discussions between Alice and Bob, plus optional Azure Speech Service for voice output.
 
-## Steps to get your configuration:
+## Required: Azure OpenAI Setup
 
 ### 1. Create Azure OpenAI Resource
 - Go to [Azure Portal](https://portal.azure.com)
@@ -27,7 +27,21 @@ From your Azure OpenAI resource in the Azure Portal:
 - Copy "KEY 1" (this is your API Key)
 - Copy "Endpoint" (this is your endpoint URL)
 
-### 4. Example Configuration
+## Optional: Azure Speech Service Setup
+
+### 1. Create Azure Speech Service Resource
+- Go to [Azure Portal](https://portal.azure.com)
+- Create a new "Speech Service" resource
+- Choose your subscription, resource group, and region
+- Complete the resource creation
+
+### 2. Get Speech Service Configuration
+From your Speech Service resource in the Azure Portal:
+- Go to "Keys and Endpoint" section
+- Copy "KEY 1" (this is your Speech API Key)
+- Note the "Region" where you deployed the service
+
+### 3. Example Configuration
 
 ```json
 {
@@ -40,12 +54,36 @@ From your Azure OpenAI resource in the Azure Portal:
     "Bob": {
       "DeploymentName": "phi-3-bob"
     }
+  },
+  "AzureSpeech": {
+    "ApiKey": "xyz789ghi012...",
+    "Region": "eastus",
+    "Alice": {
+      "VoiceName": "en-US-JennyNeural"
+    },
+    "Bob": {
+      "VoiceName": "en-US-BrianNeural"
+    }
   }
 }
 ```
 
-### 5. Use the Setup Script
-Run `.\setup.ps1` and enter these values when prompted.
+### 4. Use the Setup Script
+Run `.\setup.ps1` and enter these values when prompted. The script will configure both Azure OpenAI and Azure Speech Service (speech is optional).
+
+## Popular Neural Voices
+
+### English (US):
+- `en-US-JennyNeural` (Female, warm)
+- `en-US-BrianNeural` (Male, friendly)
+- `en-US-AriaNeural` (Female, cheerful)
+- `en-US-DavisNeural` (Male, confident)
+
+### Other Languages:
+- **UK English**: `en-GB-SoniaNeural`, `en-GB-RyanNeural`
+- **Spanish**: `es-ES-ElviraNeural`, `es-ES-AlvaroNeural`
+- **French**: `fr-FR-DeniseNeural`, `fr-FR-HenriNeural`
+- **German**: `de-DE-KatjaNeural`, `de-DE-ConradNeural`
 
 ## Recommended Model Combinations
 

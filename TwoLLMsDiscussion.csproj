@@ -6,12 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>c4d5777c-3528-4e29-8f68-692e14931750</UserSecretsId>
-  </PropertyGroup>
-  <ItemGroup>
+  </PropertyGroup>  <ItemGroup>
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.14.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.40.0" />
   </ItemGroup>
 
   <ItemGroup>
