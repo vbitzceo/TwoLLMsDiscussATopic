@@ -28,13 +28,15 @@ class Program
         {
             Console.WriteLine("No topic provided. Exiting...");
             return;
-        }
-
-        try
+        }        try
         {
-            // Create two different kernels with different personalities
-            var alice = CreateKernel("Alice", "You are Alice, an optimistic and enthusiastic AI who loves exploring new ideas. You tend to see the positive side of things and ask thoughtful questions.");
-            var bob = CreateKernel("Bob", "You are Bob, a pragmatic and analytical AI who likes to examine things critically. You tend to focus on practical implications and potential challenges.");
+            // Create two different kernels with different models and personalities
+            var alice = CreateKernel("Alice", 
+                "You are Alice, an optimistic and enthusiastic AI who loves exploring new ideas. You tend to see the positive side of things and ask thoughtful questions.",
+                "Alice");
+            var bob = CreateKernel("Bob", 
+                "You are Bob, a pragmatic and analytical AI who likes to examine things critically. You tend to focus on practical implications and potential challenges.",
+                "Bob");
 
             await StartDiscussion(alice, bob, topic);
         }
@@ -42,14 +44,14 @@ class Program
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
-    }    private static Kernel CreateKernel(string name, string personality)
+    }    private static Kernel CreateKernel(string name, string personality, string configKey)
     {
         var builder = Kernel.CreateBuilder();
         
         // Add Azure OpenAI chat completion service
         var apiKey = _configuration?["AzureOpenAI:ApiKey"];
         var endpoint = _configuration?["AzureOpenAI:Endpoint"];
-        var deploymentName = _configuration?["AzureOpenAI:DeploymentName"] ?? "gpt-4";
+        var deploymentName = _configuration?[$"AzureOpenAI:{configKey}:DeploymentName"];
         
         if (string.IsNullOrEmpty(apiKey))
         {
@@ -60,22 +62,32 @@ class Program
         {
             throw new InvalidOperationException("Azure OpenAI endpoint not found in configuration.");
         }
+        
+        if (string.IsNullOrEmpty(deploymentName))
+        {
+            throw new InvalidOperationException($"Azure OpenAI deployment name for {name} not found in configuration.");
+        }
 
         builder.AddAzureOpenAIChatCompletion(deploymentName, endpoint, apiKey);
         
         var kernel = builder.Build();
         
-        // Set the personality as a system message
+        // Set the personality and model info
         kernel.Data["Personality"] = personality;
         kernel.Data["Name"] = name;
+        kernel.Data["Model"] = deploymentName;
         
         return kernel;
-    }
-
-    private static async Task StartDiscussion(Kernel alice, Kernel bob, string topic)
+    }    private static async Task StartDiscussion(Kernel alice, Kernel bob, string topic)
     {
         Console.WriteLine($"\n🎭 Starting discussion about: {topic}");
         Console.WriteLine("=" + new string('=', topic.Length + 25));
+        Console.WriteLine();
+        
+        // Display model information
+        Console.WriteLine("🤖 Participants:");
+        Console.WriteLine($"   💭 Alice (using {alice.Data["Model"]}) - Optimistic & Enthusiastic");
+        Console.WriteLine($"   🤔 Bob (using {bob.Data["Model"]}) - Pragmatic & Analytical");
         Console.WriteLine();
 
         var aliceChatService = alice.GetRequiredService<IChatCompletionService>();
@@ -96,7 +108,7 @@ class Program
         {
             if (turn % 2 == 0) // Alice's turn
             {
-                Console.WriteLine($"💭 Alice:");
+                Console.WriteLine($"💭 Alice ({alice.Data["Model"]}):");
                 
                 aliceHistory.AddUserMessage(currentMessage);
                 var aliceResponse = await aliceChatService.GetChatMessageContentAsync(aliceHistory);
@@ -110,7 +122,7 @@ class Program
             }
             else // Bob's turn
             {
-                Console.WriteLine($"🤔 Bob:");
+                Console.WriteLine($"🤔 Bob ({bob.Data["Model"]}):");
                 
                 bobHistory.AddUserMessage(currentMessage);
                 var bobResponse = await bobChatService.GetChatMessageContentAsync(bobHistory);
