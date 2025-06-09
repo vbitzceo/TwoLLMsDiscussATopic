@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Development\\TwoLLMsDiscussATopic\\TwoLLMsDiscussion.csproj": {}
+    "C:\\development\\TwoLLMsDiscussATopic\\TwoLLMsDiscussion.csproj": {}
   },
   "projects": {
-    "C:\\Development\\TwoLLMsDiscussATopic\\TwoLLMsDiscussion.csproj": {
+    "C:\\development\\TwoLLMsDiscussATopic\\TwoLLMsDiscussion.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Development\\TwoLLMsDiscussATopic\\TwoLLMsDiscussion.csproj",
+        "projectUniqueName": "C:\\development\\TwoLLMsDiscussATopic\\TwoLLMsDiscussion.csproj",
         "projectName": "TwoLLMsDiscussion",
-        "projectPath": "C:\\Development\\TwoLLMsDiscussATopic\\TwoLLMsDiscussion.csproj",
+        "projectPath": "C:\\development\\TwoLLMsDiscussATopic\\TwoLLMsDiscussion.csproj",
         "packagesPath": "C:\\Users\\cyeaste\\.nuget\\packages\\",
-        "outputPath": "C:\\Development\\TwoLLMsDiscussATopic\\obj\\",
+        "outputPath": "C:\\development\\TwoLLMsDiscussATopic\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\cyeaste\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -46,6 +46,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.CognitiveServices.Speech": {
+              "target": "Package",
+              "version": "[1.40.0, )"
+            },
             "Microsoft.Extensions.Configuration": {
               "target": "Package",
               "version": "[8.0.0, )"

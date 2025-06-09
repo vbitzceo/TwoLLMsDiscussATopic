@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TwoLLMsDiscussion")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e013e3088fe3a5205611d68f253f63c5ce5c5d93")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5cc07353b4b9413bcb9f34701e553dbf3d900525")]
 [assembly: System.Reflection.AssemblyProductAttribute("TwoLLMsDiscussion")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TwoLLMsDiscussion")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
