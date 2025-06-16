@@ -44,10 +44,10 @@ class Program
             
             // Create two different kernels with different models and personalities
             var alice = CreateKernel("Alice", 
-                "You are Alice, an optimistic and enthusiastic AI who loves exploring new ideas. You tend to see the positive side of things and ask thoughtful questions.",
+                "You are Alice, an optimistic and enthusiastic AI who loves exploring new ideas. You tend to see the positive side of things and ask thoughtful questions. Keep your responses concise (2-3 sentences maximum) and do not use any emojis or emoticons in your responses. Focus on clear, direct communication.",
                 "Alice");
             var bob = CreateKernel("Bob", 
-                "You are Bob, a pragmatic and analytical AI who likes to examine things critically. You tend to focus on practical implications and potential challenges.",
+                "You are Bob, you are analytical and precise. Keep your responses concise (2-3 sentences maximum) and do not use any emojis or emoticons in your responses. Focus on clear, direct communication.",
                 "Bob");
 
             await StartDiscussion(alice, bob, topic, speechEnabled);
@@ -111,7 +111,23 @@ class Program
         try
         {
             Console.Write($"🔊 {speaker} is speaking... ");
-            var result = await synthesizer.SpeakTextAsync(text);
+            
+            // Clean and escape the text for SSML
+            string cleanText = EscapeForSsml(text);
+            
+            // Get the voice name from the synthesizer configuration
+            string voiceName = speaker == "Alice" ? 
+                (_configuration?["AzureSpeech:Alice:VoiceName"] ?? "en-US-JennyNeural") :
+                (_configuration?["AzureSpeech:Bob:VoiceName"] ?? "en-US-BrianNeural");
+            
+            // Wrap text in SSML with voice tag and faster rate
+            string ssml = $@"<speak version=""1.0"" xmlns=""http://www.w3.org/2001/10/synthesis"" xml:lang=""en-US"">
+                <voice name=""{voiceName}"">
+                    <prosody rate=""1.2"">{cleanText}</prosody>
+                </voice>
+            </speak>";
+            
+            var result = await synthesizer.SpeakSsmlAsync(ssml);
             
             if (result.Reason == ResultReason.SynthesizingAudioCompleted)
             {
@@ -131,6 +147,19 @@ class Program
         {
             Console.WriteLine($"❌ Speech synthesis error: {ex.Message}");
         }
+    }
+
+    private static string EscapeForSsml(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return text;
+
+        // Escape XML special characters
+        return text.Replace("&", "&amp;")
+                   .Replace("<", "&lt;")
+                   .Replace(">", "&gt;")
+                   .Replace("\"", "&quot;")
+                   .Replace("'", "&apos;");
     }
 
     private static Kernel CreateKernel(string name, string personality, string configKey)
